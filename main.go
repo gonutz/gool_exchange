@@ -20,7 +20,7 @@ func main() {
 		window.FillEllipse(centerX-20, centerY-20, 40, 40, color)
 		window.DrawEllipse(centerX-20, centerY-20, 40, 40, draw.White)
 		if mouseInCircle {
-			window.DrawScaledText("Close!", centerX-40, centerY+25, 1.6, draw.Green)
+			window.DrawScaledText("Clothes!", centerX-40, centerY+25, 1.6, draw.Green)
 		}
 
 		for _, click := range window.Clicks() {
