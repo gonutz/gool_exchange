@@ -41,6 +41,10 @@ func main() {
 					nextPlayer = player1
 				}
 			}
+
+			if gameIsOver() {
+				window.Close()
+			}
 		}
 
 		// Draw the game.
