@@ -10,6 +10,13 @@ func main() {
 	var columnSet [6][7]int
 	nextPlayer := player1
 
+	gameIsOver := func() bool {
+		return columnSet[5][0] == player1 &&
+			columnSet[5][1] == player1 &&
+			columnSet[5][2] == player1 &&
+			columnSet[5][3] == player1
+	}
+
 	nextEmptyRow := func(column int) int {
 		for y := 5; y >= 0; y-- {
 			if columnSet[y][column] == empty {
@@ -20,6 +27,10 @@ func main() {
 	}
 
     draw.RunWindow("4 gewinnt", 700, 600, func(window draw.Window) {
+		if window.WasKeyPressed(draw.KeyEscape) {
+			window.Close()
+		}
+
 		mouseX, _ := window.MousePosition()
 		mouseColumn := mouseX / 100
 
