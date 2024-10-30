@@ -11,10 +11,16 @@ func main() {
 	nextPlayer := player1
 
 	gameIsOver := func() bool {
-		return columnSet[5][0] == player1 &&
-			columnSet[5][1] == player1 &&
-			columnSet[5][2] == player1 &&
-			columnSet[5][3] == player1
+		for x := 0; x <= 3; x++ {
+			if columnSet[5][0+x] == player1 &&
+				columnSet[5][1+x] == player1 &&
+				columnSet[5][2+x] == player1 &&
+				columnSet[5][3+x] == player1 {
+				return true
+			}
+		}
+
+		return false
 	}
 
 	nextEmptyRow := func(column int) int {
