@@ -9,6 +9,7 @@ const player2 = 2
 func main() {
 	var columnSet [6][7]int
 	nextPlayer := player1
+	moves := 0
 
 	hasPlayerWon := func(player int) bool {
 		for y := 0; y <= 5; y++ {
@@ -33,7 +34,29 @@ func main() {
 			}
 		}
 
+		for x := 0; x <= 3; x++ {
+			for y := 0; y <= 2; y++ {
+				if columnSet[0+y][0+x] == player &&
+					columnSet[1+y][1+x] == player &&
+					columnSet[2+y][2+x] == player &&
+					columnSet[3+y][3+x] == player {
+					return true
+				}
+
+				if columnSet[0+y][6-x] == player &&
+					columnSet[1+y][5-x] == player &&
+					columnSet[2+y][4-x] == player &&
+					columnSet[3+y][3-x] == player {
+					return true
+				}
+			}
+		}
+
 		return false
+	}
+
+	isDraw := func() bool {
+		return moves == 42
 	}
 
 	nextEmptyRow := func(column int) int {
@@ -70,9 +93,11 @@ func main() {
 					columnSet[y][mouseColumn] = player2
 					nextPlayer = player1
 				}
+
+				moves++
 			}
 
-			if hasPlayerWon(player1) || hasPlayerWon(player2) {
+			if hasPlayerWon(player1) || hasPlayerWon(player2) || isDraw() {
 				window.Close()
 			}
 		}
