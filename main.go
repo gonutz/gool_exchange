@@ -10,13 +10,24 @@ func main() {
 	var columnSet [6][7]int
 	nextPlayer := player1
 
-	gameIsOver := func() bool {
+	hasPlayerWon := func(player int) bool {
 		for y := 0; y <= 5; y++ {
 			for x := 0; x <= 3; x++ {
-				if columnSet[y][0+x] == player1 &&
-					columnSet[y][1+x] == player1 &&
-					columnSet[y][2+x] == player1 &&
-					columnSet[y][3+x] == player1 {
+				if columnSet[y][0+x] == player &&
+					columnSet[y][1+x] == player &&
+					columnSet[y][2+x] == player &&
+					columnSet[y][3+x] == player {
+					return true
+				}
+			}
+		}
+
+		for x := 0; x <= 6; x++ {
+			for y := 0; y <= 2; y++ {
+				if columnSet[0+y][x] == player &&
+					columnSet[1+y][x] == player &&
+					columnSet[2+y][x] == player &&
+					columnSet[3+y][x] == player {
 					return true
 				}
 			}
@@ -61,7 +72,7 @@ func main() {
 				}
 			}
 
-			if gameIsOver() {
+			if hasPlayerWon(player1) || hasPlayerWon(player2) {
 				window.Close()
 			}
 		}
