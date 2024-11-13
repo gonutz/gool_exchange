@@ -8,6 +8,7 @@ const player2 = 2
 
 func main() {
 	var columnSet [6][7]int
+	var blinking [6][7]bool
 	nextPlayer := player1
 	moves := 0
 	gameIsOver := false
@@ -19,6 +20,10 @@ func main() {
 					columnSet[y][1+x] == player &&
 					columnSet[y][2+x] == player &&
 					columnSet[y][3+x] == player {
+					blinking[y][0+x] = true
+					blinking[y][1+x] = true
+					blinking[y][2+x] = true
+					blinking[y][3+x] = true
 					return true
 				}
 			}
@@ -69,7 +74,15 @@ func main() {
 		return -1
 	}
 
+	time := 0
+	blinkersVisible := true
+
     draw.RunWindow("4 gewinnt", 700, 600, func(window draw.Window) {
+		time++
+		if time % 20 == 0 {
+			blinkersVisible = !blinkersVisible
+		}
+
 		if window.WasKeyPressed(draw.KeyEscape) {
 			window.Close()
 		}
@@ -109,11 +122,13 @@ func main() {
 			for y := 0; y < 6; y++ {
             	window.FillEllipse(x*100+10, y*100+10, 80, 80, draw.Black)
 
-				if columnSet[y][x] == player1 {
-		            window.FillEllipse(x*100+10, y*100+10, 80, 80, draw.RGB(0.33, 0.33, 1))
-				}
-				if columnSet[y][x] == player2 {
-		            window.FillEllipse(x*100+10, y*100+10, 80, 80, draw.RGB(1, 0.5, 0.38))
+				if !blinking[y][x] || blinkersVisible {
+					if columnSet[y][x] == player1 {
+		        	    window.FillEllipse(x*100+10, y*100+10, 80, 80, draw.RGB(0.33, 0.33, 1))
+					}
+					if columnSet[y][x] == player2 {
+		        	    window.FillEllipse(x*100+10, y*100+10, 80, 80, draw.RGB(1, 0.5, 0.38))
+					}
 				}
 
 				if !gameIsOver && x == mouseColumn && y == nextEmptyRow(mouseColumn) {
