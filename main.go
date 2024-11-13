@@ -10,6 +10,7 @@ func main() {
 	var columnSet [6][7]int
 	nextPlayer := player1
 	moves := 0
+	gameIsOver := false
 
 	hasPlayerWon := func(player int) bool {
 		for y := 0; y <= 5; y++ {
@@ -83,7 +84,7 @@ func main() {
 			}
 		}
 
-		if leftDown {
+		if leftDown && !gameIsOver {
 			y := nextEmptyRow(mouseColumn)
 			if y != -1 {
 				if nextPlayer == player1 {
@@ -98,7 +99,7 @@ func main() {
 			}
 
 			if hasPlayerWon(player1) || hasPlayerWon(player2) || isDraw() {
-				window.Close()
+				gameIsOver = true
 			}
 		}
 
@@ -115,8 +116,12 @@ func main() {
 		            window.FillEllipse(x*100+10, y*100+10, 80, 80, draw.RGB(1, 0.5, 0.38))
 				}
 
-				if x == mouseColumn && y == nextEmptyRow(mouseColumn) {
-		            window.FillEllipse(x*100+10, y*100+10, 80, 80, draw.RGB(0.5, 0.86, 0.4))
+				if !gameIsOver && x == mouseColumn && y == nextEmptyRow(mouseColumn) {
+					if nextPlayer == player1 {
+						window.FillEllipse(x*100+10, y*100+10, 80, 80, draw.RGBA(0.33, 0.33, 1, 0.75))
+					} else {
+						window.FillEllipse(x*100+10, y*100+10, 80, 80, draw.RGBA(1, 0.5, 0.38, 0.75))
+					}
 				}
         	}
         }
