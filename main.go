@@ -100,7 +100,7 @@ func main() {
 	mouseColumn := 3
 	lastMouseX := -1
 
-    draw.RunWindow("4 gewinnt - F2 für neues Spiel", 700, 600, func(window draw.Window) {
+	draw.RunWindow("4 gewinnt - F2 für neues Spiel", 700, 600, func(window draw.Window) {
 		if window.WasKeyPressed(draw.KeyF2) {
 			columnSet = [6][7]int{}
 			blinking = [6][7]bool{}
@@ -112,8 +112,22 @@ func main() {
 			lastMouseX = -1
 		}
 
+		if window.WasKeyPressed(draw.KeyF9) {
+			a := player1
+			b := player2
+			i := empty
+			columnSet = [6][7]int{
+				{i, a, b, i, b, a, b},
+				{b, b, a, i, a, b, b},
+				{a, a, a, i, a, a, a},
+				{b, b, a, a, a, b, b},
+				{b, a, b, a, b, a, b},
+				{a, b, b, a, b, b, a},
+			}
+		}
+
 		time++
-		if time % 20 == 0 {
+		if time%20 == 0 {
 			blinkersVisible = !blinkersVisible
 		}
 
@@ -186,16 +200,16 @@ func main() {
 
 		// Draw the game.
 		window.FillRect(0, 0, 700, 600, draw.White)
-        for x := 0; x < 7; x++ {
+		for x := 0; x < 7; x++ {
 			for y := 0; y < 6; y++ {
-            	window.FillEllipse(x*100+10, y*100+10, 80, 80, draw.Black)
+				window.FillEllipse(x*100+10, y*100+10, 80, 80, draw.Black)
 
 				if !blinking[y][x] || blinkersVisible {
 					if columnSet[y][x] == player1 {
-		        	    window.FillEllipse(x*100+10, y*100+10, 80, 80, draw.RGB(0.33, 0.33, 1))
+						window.FillEllipse(x*100+10, y*100+10, 80, 80, draw.RGB(0.33, 0.33, 1))
 					}
 					if columnSet[y][x] == player2 {
-		        	    window.FillEllipse(x*100+10, y*100+10, 80, 80, draw.RGB(1, 0.5, 0.38))
+						window.FillEllipse(x*100+10, y*100+10, 80, 80, draw.RGB(1, 0.5, 0.38))
 					}
 				}
 
@@ -206,7 +220,7 @@ func main() {
 						window.FillEllipse(x*100+10, y*100+10, 80, 80, draw.RGBA(1, 0.5, 0.38, 0.75))
 					}
 				}
-        	}
-        }
-    })
+			}
+		}
+	})
 }
