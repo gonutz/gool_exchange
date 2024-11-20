@@ -14,17 +14,20 @@ func main() {
 	gameIsOver := false
 
 	hasPlayerWon := func(player int) bool {
+		won := false
+
 		for y := 0; y <= 5; y++ {
 			for x := 0; x <= 3; x++ {
 				if columnSet[y][0+x] == player &&
 					columnSet[y][1+x] == player &&
 					columnSet[y][2+x] == player &&
 					columnSet[y][3+x] == player {
+
 					blinking[y][0+x] = true
 					blinking[y][1+x] = true
 					blinking[y][2+x] = true
 					blinking[y][3+x] = true
-					return true
+					won = true
 				}
 			}
 		}
@@ -35,7 +38,13 @@ func main() {
 					columnSet[1+y][x] == player &&
 					columnSet[2+y][x] == player &&
 					columnSet[3+y][x] == player {
-					return true
+
+					blinking[0+y][x] = true
+					blinking[1+y][x] = true
+					blinking[2+y][x] = true
+					blinking[3+y][x] = true
+					won = true
+
 				}
 			}
 		}
@@ -46,19 +55,31 @@ func main() {
 					columnSet[1+y][1+x] == player &&
 					columnSet[2+y][2+x] == player &&
 					columnSet[3+y][3+x] == player {
-					return true
+
+					blinking[0+y][0+x] = true
+					blinking[1+y][1+x] = true
+					blinking[2+y][2+x] = true
+					blinking[3+y][3+x] = true
+					won = true
+
 				}
 
 				if columnSet[0+y][6-x] == player &&
 					columnSet[1+y][5-x] == player &&
 					columnSet[2+y][4-x] == player &&
 					columnSet[3+y][3-x] == player {
-					return true
+
+					blinking[0+y][6-x] = true
+					blinking[1+y][5-x] = true
+					blinking[2+y][4-x] = true
+					blinking[3+y][3-x] = true
+					won = true
+
 				}
 			}
 		}
 
-		return false
+		return won
 	}
 
 	isDraw := func() bool {
