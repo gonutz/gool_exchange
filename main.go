@@ -97,6 +97,8 @@ func main() {
 
 	time := 0
 	blinkersVisible := true
+	mouseColumn := -1
+	lastMouseX := -1
 
     draw.RunWindow("4 gewinnt", 700, 600, func(window draw.Window) {
 		time++
@@ -109,9 +111,37 @@ func main() {
 		}
 
 		mouseX, _ := window.MousePosition()
-		mouseColumn := mouseX / 100
+		if mouseX != lastMouseX {
+			col := mouseX / 100
+			if 0 <= col && col <= 6 {
+				mouseColumn = col
+			}
+		}
+		lastMouseX = mouseX
 
-		leftDown := false
+		if window.WasKeyPressed(draw.Key1) || window.WasKeyPressed(draw.KeyNum1) {
+			mouseColumn = 0
+		}
+		if window.WasKeyPressed(draw.Key2) || window.WasKeyPressed(draw.KeyNum2) {
+			mouseColumn = 1
+		}
+		if window.WasKeyPressed(draw.Key3) || window.WasKeyPressed(draw.KeyNum3) {
+			mouseColumn = 2
+		}
+		if window.WasKeyPressed(draw.Key4) || window.WasKeyPressed(draw.KeyNum4) {
+			mouseColumn = 3
+		}
+		if window.WasKeyPressed(draw.Key5) || window.WasKeyPressed(draw.KeyNum5) {
+			mouseColumn = 4
+		}
+		if window.WasKeyPressed(draw.Key6) || window.WasKeyPressed(draw.KeyNum6) {
+			mouseColumn = 5
+		}
+		if window.WasKeyPressed(draw.Key7) || window.WasKeyPressed(draw.KeyNum7) {
+			mouseColumn = 6
+		}
+
+		leftDown := window.WasKeyPressed(draw.KeyEnter) || window.WasKeyPressed(draw.KeyNumEnter)
 		for _, click := range window.Clicks() {
 			if click.Button == draw.LeftButton {
 				leftDown = true
