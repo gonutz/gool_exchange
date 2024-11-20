@@ -97,10 +97,21 @@ func main() {
 
 	time := 0
 	blinkersVisible := true
-	mouseColumn := -1
+	mouseColumn := 3
 	lastMouseX := -1
 
-    draw.RunWindow("4 gewinnt", 700, 600, func(window draw.Window) {
+    draw.RunWindow("4 gewinnt - F2 für neues Spiel", 700, 600, func(window draw.Window) {
+		if window.WasKeyPressed(draw.KeyF2) {
+			columnSet = [6][7]int{}
+			blinking = [6][7]bool{}
+			nextPlayer = player1
+			moves = 0
+			gameIsOver = false
+			time = 0
+			blinkersVisible = true
+			lastMouseX = -1
+		}
+
 		time++
 		if time % 20 == 0 {
 			blinkersVisible = !blinkersVisible
@@ -119,6 +130,12 @@ func main() {
 		}
 		lastMouseX = mouseX
 
+		if window.WasKeyPressed(draw.KeyLeft) {
+			mouseColumn = (mouseColumn + 6) % 7
+		}
+		if window.WasKeyPressed(draw.KeyRight) {
+			mouseColumn = (mouseColumn + 1) % 7
+		}
 		if window.WasKeyPressed(draw.Key1) || window.WasKeyPressed(draw.KeyNum1) {
 			mouseColumn = 0
 		}
