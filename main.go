@@ -250,8 +250,8 @@ func main() {
 		if dropPlayer != empty {
 			dropTime += dropSpeed
 
-			x := dropTargetX*100+10
 			t := ease.OutBounce(dropTime)
+			x := dropTargetX*100+10
 			y := lerp(-100, dropTargetY*100+10, t)
 			window.FillEllipse(x, y, 80, 80, playerColor[dropPlayer])
 
