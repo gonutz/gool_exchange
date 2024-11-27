@@ -27,10 +27,6 @@ func main() {
             continue
         }
 
-        // Check if the address is an IPv4 address
-        if ipNet.IP.To4() != nil {
-            fmt.Println("Local IP address:", ipNet.IP.String())
-        }
 
 		if strings.HasPrefix(ipNet.IP.String(), "10.") {
 			myAddress = ipNet.IP.String()
