@@ -1,10 +1,29 @@
 package main
 
-import "github.com/gonutz/prototype/draw"
+import (
+	"github.com/gonutz/prototype/draw"
+	"github.com/gonutz/ease"
+)
 
-const empty = 0
-const player1 = 1
-const player2 = 2
+const (
+	empty = 0
+	player1 = 1
+	player2 = 2
+
+	dropSpeed = 0.012
+)
+
+func otherPlayer(p int) int {
+	if p == player2 {
+		return player1
+	}
+	return player2
+}
+
+var playerColor = []draw.Color {
+	player1: draw.RGB(0.33, 0.33, 1),
+	player2: draw.RGB(1, 0.5, 0.38),
+}
 
 func main() {
 	var columnSet [6][7]int
@@ -12,6 +31,17 @@ func main() {
 	nextPlayer := player1
 	moves := 0
 	gameIsOver := false
+	dropPlayer := empty
+	dropTargetX := -1
+	dropTargetY := -1
+	dropTime := 0.0
+
+	startDrop := func(player, y, x int) {
+		dropPlayer = player
+		dropTargetX = x
+		dropTargetY = y
+		dropTime = 0.0
+	}
 
 	hasPlayerWon := func(player int) bool {
 		won := false
@@ -110,6 +140,7 @@ func main() {
 			time = 0
 			blinkersVisible = true
 			lastMouseX = -1
+			dropPlayer = empty
 		}
 
 		if window.WasKeyPressed(draw.KeyF9) {
@@ -179,27 +210,17 @@ func main() {
 			}
 		}
 
-		if leftDown && !gameIsOver {
+		if leftDown && dropPlayer == empty && !gameIsOver {
 			y := nextEmptyRow(mouseColumn)
 			if y != -1 {
-				if nextPlayer == player1 {
-					columnSet[y][mouseColumn] = player1
-					nextPlayer = player2
-				} else {
-					columnSet[y][mouseColumn] = player2
-					nextPlayer = player1
-				}
-
+				startDrop(nextPlayer, y, mouseColumn)
 				moves++
-			}
-
-			if hasPlayerWon(player1) || hasPlayerWon(player2) || isDraw() {
-				gameIsOver = true
 			}
 		}
 
 		// Draw the game.
 		window.FillRect(0, 0, 700, 600, draw.White)
+
 		for x := 0; x < 7; x++ {
 			for y := 0; y < 6; y++ {
 				window.FillEllipse(x*100+10, y*100+10, 80, 80, draw.Black)
@@ -213,7 +234,10 @@ func main() {
 					}
 				}
 
-				if !gameIsOver && x == mouseColumn && y == nextEmptyRow(mouseColumn) {
+				if dropPlayer == empty &&
+					!gameIsOver &&
+					x == mouseColumn &&
+					y == nextEmptyRow(mouseColumn) {
 					if nextPlayer == player1 {
 						window.FillEllipse(x*100+10, y*100+10, 80, 80, draw.RGBA(0.33, 0.33, 1, 0.75))
 					} else {
@@ -222,5 +246,35 @@ func main() {
 				}
 			}
 		}
+
+		if dropPlayer != empty {
+			dropTime += dropSpeed
+
+			x := dropTargetX*100+10
+			t := ease.OutBounce(dropTime)
+			y := lerp(-100, dropTargetY*100+10, t)
+			window.FillEllipse(x, y, 80, 80, playerColor[dropPlayer])
+
+			if dropTime >= 1.0 {
+				columnSet[dropTargetY][dropTargetX] = dropPlayer
+				nextPlayer = otherPlayer(dropPlayer)
+				dropPlayer = empty
+
+				if hasPlayerWon(player1) || hasPlayerWon(player2) || isDraw() {
+					gameIsOver = true
+				}
+			}
+		}
 	})
+}
+
+func lerp(a, b int, t float64) int {
+	return round((1 - t) * float64(a) + t * float64(b))
+}
+
+func round(x float64) int {
+	if x < 0 {
+		return int(x - 0.5)
+	}
+	return int(x + 0.5)
 }
