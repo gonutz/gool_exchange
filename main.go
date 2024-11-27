@@ -8,6 +8,7 @@ import (
 )
 
 const (
+	broadcastIP = "10.0.0.255"
 	pingPort = "25468"
 )
 
@@ -48,7 +49,7 @@ func run() error {
 
 	fmt.Println("my IP is", myAddress)
 
-    broadcastAddr, err := net.ResolveUDPAddr("udp", "255.255.255.255:" + pingPort)
+    broadcastAddr, err := net.ResolveUDPAddr("udp", broadcastIP + ":" + pingPort)
     if err != nil {
 		return err
     }
